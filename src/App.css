@@ -1,7 +1,13 @@
+body{
+  
+  background-color: black;
+  color: white;
+}
 .App {
   text-align: center;
+  
 }
-
+/*  */
 .App-logo {
   height: 40vmin;
   pointer-events: none;
@@ -35,4 +41,72 @@
   to {
     transform: rotate(360deg);
   }
+}
+
+@font-face {
+  font-family: Poppins  ;
+  src: url('../public/fonts/Poppins-Bold.ttf');
+  width: 800;
+}
+@font-face {
+  font-family: Poppins  ;
+  src: url('../public/fonts/Poppins-SemiBold.ttf');
+  width:700;
+}
+@font-face {
+  font-family: Poppins  ;
+  src: url('../public/fonts/Poppins-Medium.ttf');
+  width:600;
+}
+@font-face {
+  font-family: Poppins  ;
+  src: url('../public/fonts/Poppins-Regular.ttf');
+  width: 500;
+}
+@font-face {
+  font-family: Poppins  ;
+  src: url('../public/fonts/Poppins-Light.ttf');
+  width: 400;
+}
+
+
+.avatar{
+  background: linear-gradient(to right, red, purple);
+  width: 43px;
+  height:43px;
+  border-radius: 50%;
+  padding: 1.9px;
+
+}
+
+.profile span{
+  font-family:Poppins ;
+  font-weight: 400;
+  font-size: 10px;
+}
+.modalc{
+  border-radius: 18px;
+}
+.ModalInput{
+  background-color: rgb(83, 81, 81);
+  width: 100%;
+  border: 0.5px solid  rgb(155, 152, 152);
+  border-radius: 7px;
+}
+.ModalTextarea{
+  background-color: rgb(83, 81, 81);
+  width: 100%;
+  border: 0.5px solid rgb(155, 152, 152);
+  border-radius: 7px;
+  height: 70px;
+  
+}
+.modalInputs{
+  margin: 35px 0px;
+}
+.signupRightTop ,.signupRightButtom{
+  background-color: #1D1D1D;
+  border: 2px solid #1D1D1D;
+  border-radius: 7px;
+
 }

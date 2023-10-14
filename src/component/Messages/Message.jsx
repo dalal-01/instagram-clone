@@ -41,7 +41,7 @@ function Message({ name, message, img, active }) {
                 <span
                   style={{
                     fontFamily: " Poppins",
-                    fontSize: "10px",
+                    fontSize: "12px",
                     fontWeight: "600",
                     paddingLeft: "9px",
                   }}
@@ -65,8 +65,8 @@ function Message({ name, message, img, active }) {
             <div
               style={{
                 backgroundColor: "blue",
-                height: "5px",
-                width: "5px",
+                height: "7px",
+                width: "7px",
                 borderRadius: "50%",
               }}
             ></div>

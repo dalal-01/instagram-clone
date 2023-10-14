@@ -1,191 +1,244 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import Grid from "@mui/material/Grid";
 import Avatar from "@mui/material/Avatar";
-import IconButton from "@mui/material/IconButton";
-import Menu from "@mui/material/Menu";
-import MenuItem from "@mui/material/MenuItem";
-import CssBaseline from "@mui/material/CssBaseline";
+
 import Box from "@mui/material/Box";
-import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
-import { createTheme, ThemeProvider } from "@mui/material/styles";
 import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
+import FavoriteIcon from "@mui/icons-material/Favorite";
 import SendOutlinedIcon from "@mui/icons-material/SendOutlined";
 import ChatBubbleOutlineOutlinedIcon from "@mui/icons-material/ChatBubbleOutlineOutlined";
 import BookmarkBorderOutlinedIcon from "@mui/icons-material/BookmarkBorderOutlined";
-import eleven from "../../assets/ExplorePics/explorePic11.webp";
 import Stack from "@mui/material/Stack";
+import axios from "axios";
+import Divider from "@mui/material/Divider";
 
-const theme = createTheme({
-  palette: {
-    mode: "dark",
-  },
-});
+import PostEdit from "./PostEdit.jsx";
+
 
 const options = ["None", "Atria"];
 
+const token = localStorage.getItem("token");
 function Posts() {
-  const ITEM_HEIGHT = 48;
-  const [anchorEl, setAnchorEl] = React.useState(null);
-  const open = Boolean(anchorEl);
-  const handleClick = (event) => {
-    setAnchorEl(event.currentTarget);
-  };
-  const handleClose = () => {
-    setAnchorEl(null);
-  };
+  const [posts, setposts] = useState([]);
+  const [likes,setLikes]=useState(false)
+  const [users, setusers] = useState([]);
+
+
+
+  function handleAddLike(id) {
+  handelgetlikes(id)
+  console.log('uu',users)
+
+    setLikes(!likes)
+    const postId = id;
+    setposts((prevPosts) => {
+      return prevPosts.map((post) => {
+        if (post.id === postId) {
+          return { ...post, color: post.color == "red" ?  "white":"red" , likes:users
+        };
+        }
+        return post ;
+      });
+    });
+    axios
+      .request({
+        method: "post",
+        url: `http://16.170.173.197/posts/like/${postId}`,
+        data: {
+          id: postId,
+        },
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      })
+      .then((responses) => {
+        console.log("add likes", responses);
+      })
+      .catch((error) => {
+        console.error("Error adding like:", error);
+      });
+  }
+
+ 
+  useEffect(() => {
+    axios
+      .get("http://16.170.173.197/posts", {
+        headers: { Authorization: `Bearer ${token}`},
+      })
+      .then(function (response) {
+        setposts(response.data.posts);
+         console.log("p",posts)
+      })
+      .catch(function (error) {
+        // handle error
+        console.log(error);
+      });
+  }, []);
+
+  function handelgetlikes(id){
+    axios
+    .request({
+      method: "get",
+      url: `http://16.170.173.197/posts/likes/${id}`,
+      data: {
+        id: id,
+      },
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    })
+    .then((responses) => {
+      setusers(responses.data.likes.users)
+      // console.log('users',users)
+      // console.log("#likess", responses.data.likes.users)
+    })
+    .catch((error) => {
+      console.error("Error getting like:", error);
+    });
+  }
   return (
     <div>
-      <div className="postheader" style={{ margin: "0px" }}>
-        <Grid
-          container
-          direction="row"
-          justifyContent="space-between"
-          alignItems="center"
-        >
-          <div className="postinfo">
-            <Box
-              sx={{
-                display: "flex",
-                flexWrap: "nowrap",
-                p: 1,
-                maxWidth: 300,
-                borderRadius: 1,
-                alignItems: "center",
-              }}
+      {posts.map((p, index) => (
+        <div key={index}>
+          <div className="postheader" style={{ margin: "0px" }}>
+            <Grid
+              container
+              direction="row"
+              justifyContent="space-between"
+              alignItems="center"
             >
-              <div className="avatar">
-                <Avatar
-                  alt="Travis Howard"
-                  src=""
-                  style={{ backgroundColor: "black" }}
-                />
+              <div className="postinfo">
+                <Box
+                  sx={{
+                    display: "flex",
+                    flexWrap: "nowrap",
+                    p: 1,
+                    maxWidth: 300,
+                    borderRadius: 1,
+                    alignItems: "center",
+                  }}
+                >
+                  <div className="avatarpost">
+                    <Avatar
+                      alt="Travis Howard"
+                      src={p.user.avatar}
+                      style={{
+                        backgroundColor: "black",
+                        width: "37px ",
+                        height: "37px",
+                      }}
+                    />
+                  </div>
+                  <span
+                    style={{
+                      fontFamily: " Poppins",
+                      fontSize: "13px",
+                      fontWeight: "500",
+                      paddingLeft: "8px",
+                    }}
+                  >
+                    {p.user.userName}
+                  </span>
+                </Box>
               </div>
+              <div className="postedit">
+                <PostEdit id={p.id} setposts={setposts} posts={posts}></PostEdit>
+                
+              </div>
+            </Grid>
+          </div>
+          <div className="postBody">
+            <Box
+             
+            >
+              <img
+                src={p.image}
+                width={500}
+                style={{ border: "solid 1px rgb(223, 68, 94)" }}
+              ></img>
+            </Box>
+          </div>
+
+          <div className="postfooter">
+            <Grid
+              container
+              direction="row"
+              justifyContent="space-between"
+              alignItems="center"
+            >
+              <div className="left">
+                <span onClick={() => handleAddLike(p.id)}>
+                  <FavoriteIcon
+                    style={{
+                      fontSize: "30px",
+                      fontWeight: "400",
+                      paddingRight: "5px",
+                      color: p.color || "white",
+                    }}
+                  ></FavoriteIcon>
+                </span>
+                <SendOutlinedIcon
+                  style={{
+                    fontSize: "30px",
+                    fontWeight: "400",
+                    paddingRight: "5px",
+                  }}
+                ></SendOutlinedIcon>
+                <ChatBubbleOutlineOutlinedIcon
+                  style={{
+                    fontSize: "30px",
+                    fontWeight: "400",
+                    paddingRight: "5px",
+                  }}
+                ></ChatBubbleOutlineOutlinedIcon>
+              </div>
+              <div className="right">
+                <BookmarkBorderOutlinedIcon></BookmarkBorderOutlinedIcon>
+              </div>
+            </Grid>
+
+            <Stack
+              direction="column"
+              justifyContent="center"
+              alignItems="flex-start"
+            >
               <span
                 style={{
                   fontFamily: " Poppins",
                   fontSize: "12px",
-                  fontWeight: "450",
-                  paddingLeft: "8px",
+                  fontWeight: "600",
                 }}
-                
+              
               >
-                Dalal
+               
+                {p.likes.length} likes
               </span>
-            </Box>
-          </div>
-          <div className="postedit">
-            <ThemeProvider theme={theme}>
-              <CssBaseline />
-              <IconButton
-                aria-label="more"
-                id="long-button"
-                aria-controls={open ? "long-menu" : undefined}
-                aria-expanded={open ? "true" : undefined}
-                aria-haspopup="true"
-                onClick={handleClick}
-              >
-                <MoreHorizIcon />
-              </IconButton>
-              <Menu 
-                id="long-menu"
-                MenuListProps={{
-                  "aria-labelledby": "long-button",
-                }}
-                anchorEl={anchorEl}
-                open={open}
-                onClose={handleClose}
-                PaperProps={{
-                  style: {
-                    maxHeight: ITEM_HEIGHT * 4.5,
-                    width: "20ch",
-                   
-                  },
+              <span
+                style={{
+                  fontFamily: " Poppins",
+                  fontSize: "13px",
+                  fontWeight: "600",
                 }}
               >
-                {options.map((option) => (
-                  <MenuItem 
-                    key={option}
-                    selected={option === "Pyxis"}
-                    onClick={handleClose}
-                  >
-                    {option}
-                  </MenuItem>
-                ))}
-              </Menu>
-            </ThemeProvider>
+                
+                {p.user.userName}
+              </span>
+              <span
+                style={{
+                  fontFamily: " Poppins",
+                  fontSize: "12px",
+                  fontWeight: "400",
+                }}
+              >
+                {p.description}
+              </span>
+            </Stack>
           </div>
-        </Grid>
-      </div>
-      <div className="postBody">
-        <Box
-          sx={
-            {
-              // width: 150,
-              // height: 150,
-            }
-          }
-        >
-          <img
-            src={eleven}
-            width={390}
-            style={{ border: "solid 3px rgb(223, 68, 94)" }}
-          ></img>
-        </Box>
-      </div>
-
-      <div className="postfooter">
-        <Grid
-          container
-          direction="row"
-          justifyContent="space-between"
-          alignItems="center"
-        >
-          <div className="left">
-            <FavoriteBorderIcon
-              style={{
-                fontSize: "24px",
-                fontWeight: "400",
-                paddingRight:'5px'
-              }}
-            ></FavoriteBorderIcon>
-            <SendOutlinedIcon  style={{
-                fontSize: "24px",
-                fontWeight: "400",
-                paddingRight:'5px'
-              }}></SendOutlinedIcon>
-            <ChatBubbleOutlineOutlinedIcon  style={{
-                fontSize: "24px",
-                fontWeight: "400",
-                paddingRight:'5px'
-              }}></ChatBubbleOutlineOutlinedIcon>
-          </div>
-          <div className="right">
-            <BookmarkBorderOutlinedIcon></BookmarkBorderOutlinedIcon>
-          </div>
-        </Grid>
-
-        <Stack
-          direction="column"
-          justifyContent="center"
-          alignItems="flex-start"
-        >
-          <span  style={{
-          fontFamily: " Poppins",
-          fontSize: "11px",
-          fontWeight: "600",
-        }}>744 likes</span>
-          <span style={{
-          fontFamily: " Poppins",
-          fontSize: "10px",
-          fontWeight: "500",
-        }}>Dalal</span>
-          <span style={{
-          fontFamily: " Poppins",
-          fontSize: "9px",
-          fontWeight: "400",
-        }}>lkjj skrg weugh seriug eughbs </span>
-        </Stack>
-      </div>
+          <Divider
+            style={{ backgroundColor: "rgb(140,140,140)", margin: "19px 0px" }}
+          ></Divider>
+        </div>
+      ))}
     </div>
   );
 }

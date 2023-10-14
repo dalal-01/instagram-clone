@@ -7,12 +7,12 @@ function SendMessage() {
   return (
     <div style={{paddingTop:'180px'}}> 
       <Stack direction="column" justifyContent="center" alignItems="center" spacing={1}>
-        <img src={messengerlogo} width={"80px"}></img>
+        <img src={messengerlogo} width={"110px"}></img>
         <span
           style={{
             fontFamily: " Poppins",
-            fontSize: "15px",
-            fontWeight: "500",
+            fontSize: "20px",
+            fontWeight: "600",
           }}
         >
           Your Messages
@@ -20,7 +20,7 @@ function SendMessage() {
         <span
           style={{
             fontFamily: " Poppins",
-            fontSize: "12px",
+            fontSize: "13px",
             fontWeight: "400",
           }}
         >
@@ -30,7 +30,7 @@ function SendMessage() {
           sx={{
             borderRadius: "8px",
             fontFamily: " Poppins",
-            fontSize: "10px",
+            fontSize: "12px",
             fontWeight: "600",
             backgroundColor:"rgb(33, 150, 243)"
           }}

@@ -1,10 +1,11 @@
-import * as React from "react";
+import React, { useState } from "react";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
 import Modal from "@mui/material/Modal";
 import Divider from "@mui/material/Divider";
 import Container from "@mui/material/Container";
+import axios from "axios";
 
 const style = {
   position: "absolute",
@@ -17,13 +18,59 @@ const style = {
   boxShadow: 24,
 };
 
-export default function CreatePost({open,handelclose}) {
+export default function CreatePost({open,handleClose,setposts}) {
+  // const [open, setOpen] = useState(true);
+  //  const handleOpen = () => setOpen(true);
+  //  const handleClose = () => setOpen(false)
+  // const [posts, setposts] = useState([]);
 
+  const [postImg,setPostImg]=useState(null);
+  const [postDesc,setPostDesc]=useState(null);
+  const [postImageCover, setPostImageCover] = useState(null);
+  const token = localStorage.getItem("token")
+
+
+  const handleImageChange = (event) => {
+    
+    const file = event.target.files[0];
+    setPostImg(file);
+
+    const reader = new FileReader();
+    reader.onload = () => {
+      setPostImageCover(reader.result);
+    };
+    reader.readAsDataURL(file);
+  };
+
+
+  let formData = new FormData();
+
+  formData.append("description", postDesc)
+  formData.append("image", postImg)
+
+  function handleSubmit(event) {
+    event.preventDefault();
+
+
+    axios.post("http://16.170.173.197/posts", formData, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "multipart/form-data"
+      }
+    }).then((response) => {
+      console.log("create", response)
+      setposts((prevMomeris) => [...prevMomeris, response.data])
+    }).catch((error) => {
+      console.log("Error:", error)
+    })
+
+    handleClose()
+  }
   return (
     <div>
       <Modal
         open={open}
-         onClose={handelclose}
+        onClose={handleClose}
         aria-labelledby="modal-modal-title"
         aria-describedby="modal-modal-description"
       >
@@ -35,77 +82,96 @@ export default function CreatePost({open,handelclose}) {
               fontSize: "10px",
               fontWeight: "400",
               textAlign: "center",
-              margin:'5px'
+              margin: "5px",
             }}
           >
             Create new post
           </Typography>
-          <Divider
-            style={{ backgroundColor: "rgb(140,140,140)"}}
-          ></Divider>
+          <Divider style={{ backgroundColor: "rgb(140,140,140)" }}></Divider>
 
-         
           <div className="modal-body">
             <Container maxWidth="sm">
-              <div className="modalInputs">
-                <h4
-                  style={{
-                    fontFamily: " Poppins",
-                    fontSize: "10px",
-                    fontWeight: "600",
-                    margin: "0px",
-                    color:"rgb(180,180,180)"
-                  }}
-                >
-                  Title
-                </h4>
-                <input className="ModalInput"></input>
-              </div>
-              <div className="modalInputs">
-                <h4
-                  style={{
-                    fontFamily: " Poppins",
-                    fontSize: "10px",
-                    fontWeight: "600",
-                    margin: "0px",
-                    //  marginTop:'25px'
-                  }}
-                >
-                  Body
-                </h4>
-                <textarea className="ModalTextarea"></textarea>
-              </div>
-              <div className="modalInputs" style={{textAlign:'center'}}>
-                <Button
-                  sx={{
-                    borderRadius: "18px",
-                    fontFamily: " Poppins",
-                    fontSize: "10px",
-                    fontWeight: "700",
-                    padding:"3px 25px",
-                    backgroundColor:"rgb(33, 150, 243)"
-                  }}
-                  variant="contained"
-                >
-                  Choose Image
-                </Button>
-              </div>
-              <div className="modalInputs" style={{textAlign:'center'}}>
-                <Button
-                  sx={{
-                    borderRadius: "18px",
-                    fontFamily: " Poppins",
-                    fontSize: "10px",
-                    fontWeight: "700",
-                    padding:"3px 25px",
-                    backgroundColor:"rgb(33, 150, 243)"
-
-                  }}
-                  variant="contained"
-                >
-                  Post
-                </Button>
-              </div>            </Container>
+              <form>
+                <div className="modalInputs">
+                  <h4
+                    style={{
+                      fontFamily: " Poppins",
+                      fontSize: "10px",
+                      fontWeight: "600",
+                      margin: "0px",
+                      color: "rgb(180,180,180)",
+                    }}
+                  >
+                    Title
+                  </h4>
+                  <input className="ModalInput"  value={postDesc}
+            onChange={((e)=>{
+              setPostDesc(e.target.value)
+            })}
+            required
+            fullWidth
+            ></input>
+                </div>
+                <div className="modalInputs">
+                  <h4
+                    style={{
+                      fontFamily: " Poppins",
+                      fontSize: "10px",
+                      fontWeight: "600",
+                      margin: "0px",
+                     
+                      //  marginTop:'25px'
+                    }}
+                  >
+                    Body
+                  </h4>
+                
+                 {postImageCover &&(<img
+              src={postImageCover}
+              alt="Uploaded"
+              style={{ width: "100%", marginBottom: "1rem" }}
+            />
+                 )}
+                  
+                </div>
+                <div className="modalInputs" style={{ textAlign: "center" }}>
+                  <label htmlFor="image-upload">
+                  {/* <Button
+                    
+                    variant="contained"
+                   
+                  >
+                    Choose Image
+                  </Button> */}
+                  </label>
+                  <input 
+            id="image-upload"
+            type="file"
+            accept="image/*"
+            onChange={handleImageChange}
+            // style={{ display: "none" }}
+          />
+                </div>
+                <div className="modalInputs" style={{ textAlign: "center" }}>
+                  <Button
+                    sx={{
+                      borderRadius: "18px",
+                      fontFamily: " Poppins",
+                      fontSize: "10px",
+                      fontWeight: "700",
+                      padding: "3px 25px",
+                      backgroundColor: "rgb(33, 150, 243)",
+                    }}
+                    variant="contained"
+                    type="submit"
+                    
+                    onClick={handleSubmit}
+                  >
+                    Post
+                  </Button>
+                </div>
+              </form>
+            </Container>
           </div>
         </Box>
       </Modal>

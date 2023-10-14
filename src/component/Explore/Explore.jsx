@@ -8,7 +8,7 @@ export default function Explore() {
     <div>
       <Grid container justifyContent="center">
         <Grid item xs={8}>
-          <ImageList cols={3}>
+          <ImageList cols={3} gap={10}>
             {itemData.map((item) => (
               <ImageListItem key={item.img}>
                 <img

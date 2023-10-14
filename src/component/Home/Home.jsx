@@ -1,7 +1,6 @@
 import React from 'react'
 import Box from '@mui/material/Box';
 import Grid from '@mui/material/Grid';
-import Sidebar from '../Sidebar.jsx';
 import Content from './Content/Content.jsx';
 import Suggestion from './Suggestions.jsx';
 
@@ -20,8 +19,7 @@ function Home() {
         <Grid item xs={3}>
             <Suggestion></Suggestion>
         </Grid>
-        <Grid item xs={1}>
-        </Grid>
+        
       </Grid>
     </Box>
         </div>

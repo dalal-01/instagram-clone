@@ -13,11 +13,11 @@ import Message from "./Message.jsx";
 import SendMessage from "./SendMessage.jsx";
 
 const MessagesArray = [
-  { id: 1, img: one, name: "Farah Zakarneh", message: "Followed by moath"  ,active:'yes'},
-  { id: 2, img: two, name: "Batool Azzam", message: "Lorem ipsum dolor sit."  ,active:'no'},
-  { id: 3, img: three, name: "Hala", message:"Lorem ipsum dolor sit."  ,active:'yes'},
-  { id: 4, img: four, name: "Anwar Ghannam", message:"Lorem ipsum dolor sit."  ,active:'no'},
-  { id: 5, img: five, name: "Jenan Kmail", message:"Lorem ipsum dolor sit." ,active:'no' },
+  { id: 1, img: one, name: "Farah Zakarneh", message: "Followed by moath . 3m"  ,active:'yes'},
+  { id: 2, img: two, name: "Batool Azzam", message: "Lorem ipsum dolor sit . 55m"  ,active:'no'},
+  { id: 3, img: three, name: "Hala", message:"Lorem ipsum dolor sit .  1h"  ,active:'yes'},
+  { id: 4, img: four, name: "Anwar Ghannam", message:"Lorem ipsum dolor sit .  5h"  ,active:'no'},
+  { id: 5, img: five, name: "Jenan Kmail", message:"Lorem ipsum dolor sit .  7h" ,active:'no' },
 ];
 
 function Messages() {
@@ -47,12 +47,12 @@ function Messages() {
                       alignItems: "center",
                     }}
                   >
-                    <span style={{fontFamily:'Poppins',fontWeight:'600', fontSize:'13px'}}>dalalzakarneh</span>
-                    <ExpandMoreOutlinedIcon fontSize="15"></ExpandMoreOutlinedIcon>
+                    <span style={{fontFamily:'Poppins',fontWeight:'600', fontSize:'19px'}}>dalalzakarneh</span>
+                    <ExpandMoreOutlinedIcon  sx={{ fontSize: "1.7rem",  }}></ExpandMoreOutlinedIcon>
                   </Box>
                 </div>
                 <div className="Newmessage">
-                  <ModeOutlinedIcon fontSize="15"></ModeOutlinedIcon>
+                  <ModeOutlinedIcon  sx={{ fontSize: "1.5rem",  }}></ModeOutlinedIcon>
                 </div>
               </Grid>
             </div>
@@ -64,11 +64,11 @@ function Messages() {
               justifyContent="space-between"
               alignItems="center"
             >
-              <span style={{fontFamily:'Poppins',fontWeight:'600', fontSize:'12px',marginLeft:'7px'}}>Messages</span>
-              <span style={{fontFamily:'Poppins',fontWeight:'400', fontSize:'11px'}}>Request</span>
+              <span style={{fontFamily:'Poppins',fontWeight:'600', fontSize:'15px',marginLeft:'7px'}}>Messages</span>
+              <span style={{fontFamily:'Poppins',fontWeight:'400', fontSize:'14px'}}>Request</span>
             </Grid>
-            {MessagesArray.map((msg) => {
-              return <Message name={msg.name} message={msg.message} img={msg.img } active={msg.active}></Message>;
+            {MessagesArray.map((msg,index) => {
+              return <Message key={index} name={msg.name} message={msg.message} img={msg.img } active={msg.active}></Message>;
             })}
           </div>
         </Grid>

@@ -1,30 +1,55 @@
-import React from "react";
+import React, { useState } from "react";
 import Grid from "@mui/material/Grid";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
 import Divider from "@mui/material/Divider";
 import instalogo from "../assets/instagram-logo.png";
-import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
+import Link from "@mui/material/Link";
+
 import InstagramScreen from "../InstagramScreen.jsx";
+import axios from "axios";
 
 function Signup() {
+  const navigate = useNavigate();
+  let [userData, setUsrData] = useState({
+    userName: "",
+    email: "",
+    password: "",
+  });
+
+  function handleSubmit(e) {
+    e.preventDefault();
+    axios
+      .post("http://16.170.173.197/users/signup", userData)
+      .then(function (response) {
+        const token = response.data.token;
+        localStorage.setItem("token", token);
+        navigate("/home");
+        console.log(response);
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
+  }
+
   return (
     <div>
       <Grid container>
-      <Grid item xs={6} container   justifyContent="flex-end" 
->
-          <div style={{margin:'50px 150px 0px 0px'}} ><InstagramScreen></InstagramScreen></div>
-        
+        <Grid item xs={6.5} container justifyContent="flex-end">
+          <div style={{ margin: "50px 150px 0px 0px" }}>
+            <InstagramScreen></InstagramScreen>
+          </div>
         </Grid>
-        <Grid item xs={3}>
+        <Grid item xs={3.5}>
           <Box
             className="signupRightTop"
             container
             maxWidth="sm"
-            style={{ padding: " 15px 40px", margin: "30px 0px 15px 0px" }}
+            style={{ padding: " 15px 25px", margin: "30px 0px 15px 0px" }}
           >
-            <img src={instalogo} width={"145px"}></img>
+            <img src={instalogo} width={"145px"} alt=""></img>
             <Typography
               style={{
                 fontFamily: " Poppins",
@@ -64,67 +89,89 @@ function Signup() {
             >
               or
             </Divider>
-            <div className="signupInputs">
-              <input
-                label="Email"
-                placeholder="Email"
-                style={{
-                  margin: "7px 0px",
-                  width: "100%",
-                  padding: "7px",
-                  fontFamily: " Poppins",
-                  fontSize: "12px",
-                  fontWeight: "700",
-                  borderRadius: "8px",
-                  borderWidth: "0px",
-                }}
-              ></input>
+            <form noValidate onSubmit={handleSubmit}>
+              <div className="signupInputs">
+                <input
+                  name="Email"
+                  required
+                  label="Email"
+                  placeholder="Email"
+                  style={{
+                    margin: "7px 0px",
+                    width: "100%",
+                    padding: "7px",
+                    fontFamily: " Poppins",
+                    fontSize: "12px",
+                    fontWeight: "700",
+                    borderRadius: "8px",
+                    borderWidth: "0px",
+                  }}
+                  value={userData.email}
+                  onChange={(e) => {
+                    setUsrData({ ...userData, email: e.target.value });
+                  }}
+                ></input>
 
-              <input
-                label="Username"
-                placeholder="Username"
-                style={{
-                  margin: "7px 0px",
-                  width: "100%",
-                  padding: "7px",
-                  fontFamily: " Poppins",
-                  fontSize: "12px",
-                  fontWeight: "700",
-                  borderRadius: "8px",
-                  borderWidth: "0px",
-                }}
-              ></input>
-              <input
-                label="Password"
-                placeholder="password"
-                style={{
-                  margin: "7px 0px",
-                  width: "100%",
-                  padding: "7px",
-                  fontFamily: " Poppins",
-                  fontSize: "12px",
-                  fontWeight: "700",
-                  borderRadius: "8px",
-                  borderWidth: "0px",
-                }}
-              ></input>
-              <Button
-                sx={{
-                  borderRadius: "7px",
-                  fontFamily: " Poppins",
-                  fontSize: "15px",
-                  fontWeight: "600",
-                  padding: "1px 25px",
-                  backgroundColor: "rgb(33, 150, 243)",
-                  textTransform: "none",
-                  width: "100%",
-                  margin: "7px 0px",
-                }}
-                variant="contained"
-              >
-                Sign Up
-              </Button>
-            </div>
+                <input
+                  autoComplete="given-name"
+                  name="userName"
+                  required
+                  label="Username"
+                  placeholder="Username"
+                  style={{
+                    margin: "7px 0px",
+                    width: "100%",
+                    padding: "7px",
+                    fontFamily: " Poppins",
+                    fontSize: "12px",
+                    fontWeight: "700",
+                    borderRadius: "8px",
+                    borderWidth: "0px",
+                  }}
+                  value={userData.userName}
+                  onChange={(e) => {
+                    setUsrData({ ...userData, userName: e.target.value });
+                  }}
+                ></input>
+                <input
+                  name="Password"
+                  required
+                  label="Password"
+                  placeholder="password"
+                  style={{
+                    margin: "7px 0px",
+                    width: "100%",
+                    padding: "7px",
+                    fontFamily: " Poppins",
+                    fontSize: "12px",
+                    fontWeight: "700",
+                    borderRadius: "8px",
+                    borderWidth: "0px",
+                  }}
+                  value={userData.password}
+                  onChange={(e) => {
+                    setUsrData({ ...userData, password: e.target.value });
+                  }}
+                ></input>
+                <Button
+                  type="submit"
+                  sx={{
+                    borderRadius: "7px",
+                    fontFamily: " Poppins",
+                    fontSize: "15px",
+                    fontWeight: "600",
+                    padding: "1px 25px",
+                    backgroundColor: "rgb(33, 150, 243)",
+                    textTransform: "none",
+                    width: "100%",
+                    margin: "7px 0px",
+                  }}
+                  variant="contained"
+                >
+                  Sign Up
+                </Button>
+              </div>
+            </form>
             <Typography
               style={{
                 fontFamily: " Poppins",
@@ -143,7 +190,7 @@ function Signup() {
             className="signupRightButtom"
             container
             maxWidth="sm"
-            style={{ padding: " 15px 40px", margin: "15px 0px" }}
+            // style={{ padding: " 15px 40px", margin: "15px 0px" }}
           >
             <Typography
               style={{
@@ -155,10 +202,19 @@ function Signup() {
                 color: "rgb(240,240,240)",
               }}
             >
-              Have an account? <Link style={{color:'rgb(33, 150, 243)',fontFamily: " Poppins",
-                fontSize: "12px",
-                fontWeight: "600",
-                textDecoration:'none'}}>Log In</Link>
+              Have an account?{" "}
+              <Link
+                href="/"
+                style={{
+                  color: "rgb(33, 150, 243)",
+                  fontFamily: " Poppins",
+                  fontSize: "12px",
+                  fontWeight: "600",
+                  textDecoration: "none",
+                }}
+              >
+                Log In
+              </Link>
             </Typography>
           </Box>
         </Grid>
